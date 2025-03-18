@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
       - name: fastapi-backend
-        image: myrepo/fastapi-backend:latest
+        image: 864981739210.dkr.ecr.us-east-1.amazonaws.com/backend:1
         ports:
         - containerPort: 8000
         envFrom:
