@@ -29,7 +29,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/data/postgres"
+    path: "/mnt/data/postgres"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
