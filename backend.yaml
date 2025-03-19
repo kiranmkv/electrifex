@@ -15,8 +15,8 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  DB_USER: "dXNlcg=="  # Base64 encoded "user"
-  DB_PASSWORD: "cGFzc3dvcmQ="  # Base64 encoded "password"
+  POSTGRES_USER: "admin"  # Base64 encoded "user"
+  POSTGRES_PASSWORD: "cGFzc3dvcmQ="  # Base64 encoded "password"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -84,6 +84,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: default  # Ensure this matches where your secret/configMap exists
 spec:
   replicas: 1
   selector:
@@ -99,18 +100,29 @@ spec:
         image: postgres:latest
         ports:
         - containerPort: 5432
-        envFrom:
-        - configMapRef:
-            name: backend-config
-        - secretRef:
-            name: backend-secret
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: backend-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapRef:
+              name: backend-config
+              key: POSTGRES_DB
         volumeMounts:
         - mountPath: "/var/lib/postgresql/data"
           name: postgres-storage
       volumes:
       - name: postgres-storage
         persistentVolumeClaim:
-          claimName: postgres-pvc
+          claimName: postgres-pvc  # Ensure this PVC exists in the same namespace
 ---
 apiVersion: v1
 kind: Service
