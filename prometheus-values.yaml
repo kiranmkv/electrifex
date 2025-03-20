@@ -5,3 +5,20 @@ server:
     - job_name: "fastapi"
       static_configs:
         - targets: ["fastapi-backend-service:8000"]
+
+grafana:
+  service:
+    type: LoadBalancer
+    port: 80
+
+#  ingress:
+ #   enabled: true
+ #   annotations:
+  #    kubernetes.io/ingress.class: "nginx"
+   #   cert-manager.io/cluster-issuer: "letsencrypt-prod"  # For HTTPS (if using cert-manager)
+  #  hosts:
+   #   - grafana.example.com  # Change to your actual domain
+    #tls:
+     # - hosts:
+      #    - grafana.example.com
+       # secretName: grafana-tls  # For HTTPS, update accordingly
