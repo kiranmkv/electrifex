@@ -3,8 +3,24 @@ import os
 import asyncpg
 from prometheus_fastapi_instrumentator import Instrumentator
 import uvicorn
+import structlog
+import logging
+
+structlog.configure(
+    processors=[
+        structlog.processors.JSONRenderer()
+    ]
+)
+logger = structlog.get_logger()
+
 app = FastAPI()
 pool = None
+
+@app.get("/")
+async def root():
+    logger.info("Root endpoint accessed")
+    return {"message": "Hello, World!"}
+    
 @app.on_event("startup")
 async def startup():
     global pool
@@ -31,6 +47,7 @@ async def shutdown():
         await pool.close()
 @app.get("/healthz")
 async def healthz():
+    logger.info("Health check endpoint accessed")
     return {"status": "OK"}
     
 Instrumentator().instrument(app).expose(app)
