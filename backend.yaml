@@ -66,6 +66,12 @@ spec:
             name: backend-config
         - secretRef:
             name: backend-secret
+        volumeMounts:
+        - name: logs
+          mountPath: /var/log
+      volumes:
+      - name: logs
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
