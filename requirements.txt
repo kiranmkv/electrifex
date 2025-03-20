@@ -4,3 +4,4 @@ asyncpg
 sqlalchemy
 psycopg2-binary
 prometheus-fastapi-instrumentator
+structlog
