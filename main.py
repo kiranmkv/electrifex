@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import os
 import asyncpg
+from prometheus_fastapi_instrumentator import Instrumentator
 import uvicorn
 app = FastAPI()
 pool = None
@@ -31,6 +32,8 @@ async def shutdown():
 @app.get("/healthz")
 async def healthz():
     return {"status": "OK"}
+    
+Instrumentator().instrument(app).expose(app)
 if __name__ == "__main__":
     # Run the application on host 0.0.0.0 and port 8000
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
